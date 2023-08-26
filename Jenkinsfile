@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    // agent { docker { image 'python:3.11.4-alpine3.18' } }
     stages {
         stage('build') {
             steps {
@@ -9,7 +8,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'source backend/run.sh'
+                sh 'docker compose up -d'
             }
         }
     }
