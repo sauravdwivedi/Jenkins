@@ -1,7 +1,9 @@
 # Jenkins
+
+- https://harshityadav95.medium.com/how-to-setup-docker-in-jenkins-on-mac-c45fe02f91c5
+- https://github.com/jenkinsci/docker/blob/master/README.md
  
 ```bash
-- https://github.com/jenkinsci/docker/blob/master/README.md
-docker run -p 8080:8080 -p 50000:50000 --restart=on-failure -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts-jdk11
-- http://localhost:8080/
 ```
+- http://localhost:8080/ 
+- http://127.0.0.1:5000/api/v1/ui/
