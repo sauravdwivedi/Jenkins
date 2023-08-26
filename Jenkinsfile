@@ -8,7 +8,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                sh 'pwd'
                 sh 'cd'
+                sh 'pwd'
                 sh 'cat "/Users/sdwivedi/Documents/Saurav Dwivedi/Data Science/Git/C-Sharp/MatrixMultiplication.cs"'
             }
         }
