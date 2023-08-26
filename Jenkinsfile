@@ -6,5 +6,10 @@ pipeline {
                 sh 'python3 --version'
             }
         }
+        stage('Deploy') {
+            steps {
+                sh 'cat "/Users/sdwivedi/Documents/Saurav Dwivedi/Data Science/Git/C-Sharp/MatrixMultiplication.cs"'
+            }
+        }
     }
 }
