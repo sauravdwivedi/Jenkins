@@ -9,8 +9,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'cd'
-            }
-            steps {
                 sh 'cat "/Users/sdwivedi/Documents/Saurav Dwivedi/Data Science/Git/C-Sharp/MatrixMultiplication.cs"'
             }
         }
