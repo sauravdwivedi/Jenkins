@@ -2,11 +2,17 @@ FROM python
 
 WORKDIR /src
 
-COPY ./backend /src/backend
+COPY ./backend ./backend
 
-RUN chmod +x /src/backend/run.sh
-RUN sh /src/backend/run.sh
+ENV PYTHONPATH=/src:/src/backend:/src/backend/controllers
 
-ENTRYPOINT ["screen python3", "app.py", "> log.txt 2>&1 &"]
+WORKDIR /src/backend
+
+ENV FLASK_APP=app
+
+RUN chmod +x run.sh
+RUN sh run.sh
+
+ENTRYPOINT ["python3", "app.py"]
 
 EXPOSE 5000

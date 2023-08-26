@@ -8,7 +8,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -it $(docker build -q .)'
+                sh 'docker build -t backend .'
+                sh 'docker run -d -p 5000:5000 backend'
             }
         }
     }
