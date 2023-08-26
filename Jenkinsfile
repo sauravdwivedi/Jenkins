@@ -8,8 +8,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'cat MatrixMultiplication.cs'
-                sh 'python3'
+                sh 'source backend/run.sh'
             }
         }
     }
