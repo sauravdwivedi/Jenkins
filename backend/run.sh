@@ -26,4 +26,3 @@ echo "Sleeping for 30 seconds"
 sleep 30
 
 echo "Start flask application"
-screen python3 app.py > log.txt 2>&1 &

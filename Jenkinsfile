@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker compose up -d'
+                sh 'docker run -it $(docker build -q .)'
             }
         }
     }
