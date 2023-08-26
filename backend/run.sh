@@ -5,7 +5,6 @@ export PYTHONPATH=`pwd`:`cd backend && pwd`:`cd backend/controllers && pwd`
 cd backend
 pip3 install -r requirements.txt
 export FLASK_APP=app
-open http://127.0.0.1:5000/api/v1/ui/
 
 echo "Waiting for database to be ready"
 echo "Sleeping for 30 seconds"
