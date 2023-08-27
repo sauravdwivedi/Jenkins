@@ -3,13 +3,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build --no-cache -t backend .'
+                sh 'docker build -t jenkins-backend .'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker stop backend || true && docker rm backend || true'
-                sh 'docker run --name backend -d -p 5000:5000 backend'
+                sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
+                sh 'docker run --name jenkins-backend -d -p 5000:5000 jenkins-backend'
             }
         }
     }
