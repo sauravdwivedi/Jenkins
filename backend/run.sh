@@ -1,7 +1,4 @@
 #!/bin/bash
-python3 -m venv venv
-source venv/bin/activate
-pip3 install -r requirements.txt
 
 echo "Waiting for database to be ready"
 echo "Sleeping for 30 seconds"
