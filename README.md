@@ -1,4 +1,6 @@
-# Jenkins
+# Jenkins pipeline with flask backend app
+
+<img src=pic.PNG alt="Jenkins pipeline">
 
 ## Install and configure Jenkins
 
