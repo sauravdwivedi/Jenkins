@@ -9,7 +9,10 @@
 - https://harshityadav95.medium.com/how-to-setup-docker-in-jenkins-on-mac-c45fe02f91c5
 
 ## Run Jenkins
-
+```bash
+brew services start jenkins
+brew services restart jenkins
+````
 - http://localhost:8080/ 
 
 ## Create Jenkins pipeline
