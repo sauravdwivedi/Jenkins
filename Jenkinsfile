@@ -1,14 +1,13 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
-                sh 'python3 --version'
+                sh 'docker build -t backend .'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker build -t backend .'
                 sh 'docker run -d -p 5000:5000 backend'
             }
         }
