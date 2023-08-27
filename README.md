@@ -9,7 +9,10 @@
 - https://harshityadav95.medium.com/how-to-setup-docker-in-jenkins-on-mac-c45fe02f91c5
 
 ## Run Jenkins
-
+```bash
+brew services start jenkins
+brew services restart jenkins
+```
 - http://localhost:8080/ 
 
 ## Create Jenkins pipeline
@@ -23,7 +26,7 @@ gh repo clone sauravdwivedi/Jenkins
 ```
 
 ## Setup git repo 
-Copy project directory to a git repo and configure that repo in Jenkins pipeline
+Copy project directory to a git repo and configure that repo in Jenkins pipeline. Docker should be up and running.
 
 ## Backend app
 
