@@ -7,12 +7,12 @@ pipeline {
     agent any
     stages {
         stage('Build') {
-            script {
-                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            steps {
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
+                // sh 'docker build -t jenkins-backend .'
             }
-            // steps {
-            //     sh 'docker build -t jenkins-backend .'
-            // }
         }
         stage('Deploy') {
             script {
