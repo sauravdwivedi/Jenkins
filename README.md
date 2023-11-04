@@ -28,6 +28,18 @@ gh repo clone sauravdwivedi/Jenkins
 ## Setup git repo 
 Copy project directory to a git repo and configure that repo in Jenkins pipeline. Docker should be up and running.
 
+## Setup Docker Hub credentials
+
+Install Docker Pipeline plugin in Jenkins, and setup docker hub credentials (Manage Jenkins -> Manage Plugins):
+
+- https://gcore.com/learning/building-docker-images-to-docker-hub-using-jenkins-pipelines/
+
+Modify Jenkinsfile accordingly:
+
+```json
+registry = "<Your docker hub username>/<Your repository name>"
+```
+
 ## Backend app
 
 If Jenkins pipeline works fine, then backend app runs on
