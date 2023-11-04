@@ -15,12 +15,12 @@ pipeline {
             }
         }
         stage('Deploy') {
-            script {
-                docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push()
-                }
-            }
             steps {
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
                 sh 'docker stop dockerImage || true && docker rm dockerImage || true'
                 sh 'docker run --name jenkins-backend -d -p 5000:5000 dockerImage'
             }
