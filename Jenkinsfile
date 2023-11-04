@@ -3,6 +3,7 @@ pipeline {
         registry = "sauravdwivedi/jenkins-example-app"
         registryCredential = 'dockerhub_id'
         dockerImage = ''
+        containerLog = "***************************************************container-logs***************************************************"
     }
     agent any
     stages {
@@ -26,7 +27,7 @@ pipeline {
         }
         stage('Check container logs') {
             steps {
-                sh(returnStdout: true, script: 'echo "***************************************************container-logs***************************************************"')
+                sh 'echo $containerLog'
                 sh 'docker logs jenkins-backend'
             }
         }
