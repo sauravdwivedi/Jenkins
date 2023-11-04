@@ -45,3 +45,7 @@ registry = "<Your docker hub username>/<Your repository name>"
 If Jenkins pipeline works fine, then backend app runs on
 
 - http://127.0.0.1:5000/api/v1/ui/
+
+## Jenkins console output
+
+<img src=log.PNG alt="Jenkins log">
