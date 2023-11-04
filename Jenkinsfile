@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Check container logs') {
             steps {
-                sh(returnStdout: false, script: 'echo "*************************************************************container-logs*************************************************************"')
+                sh(returnStdout: true, script: '**********************************************************container-logs**********************************************************')
                 sh 'docker logs jenkins-backend'
             }
         }
