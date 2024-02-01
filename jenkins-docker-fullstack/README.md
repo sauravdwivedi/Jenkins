@@ -1,4 +1,4 @@
-# Jenkins pipeline with flask backend app
+# Jenkins pipeline with flask backend and React frontend apps
 
 <img src=pic.PNG alt="Jenkins pipeline">
 
@@ -8,10 +8,16 @@
 - https://github.com/jenkinsci/docker/blob/master/README.md
 - https://harshityadav95.medium.com/how-to-setup-docker-in-jenkins-on-mac-c45fe02f91c5
 
-## Run Jenkins
+## Run Jenkins (Homebrew)
 ```bash
 brew services start jenkins
 brew services restart jenkins
+```
+- http://localhost:8080/ 
+
+## Run Jenkins (Docker)
+```bash
+docker run --name jenkins -d -p 8080:8080 -p 50000:50000 --restart=on-failure jenkins/jenkins:lts-jdk17 
 ```
 - http://localhost:8080/ 
 
@@ -23,7 +29,6 @@ brew services restart jenkins
 
 ```bash
 gh repo clone sauravdwivedi/Jenkins
-cd jenkins-docker-fullstack
 ```
 
 ## Setup git repo 
