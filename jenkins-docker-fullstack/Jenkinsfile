@@ -58,7 +58,7 @@ pipeline {
             //     sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
             // }
             steps {
-                sh "docker compose -f ${dockerComposeFile} -d up backend"
+                sh "docker compose -f ${dockerComposeFile} up -d backend"
             }
         }
         stage('Deploy frontend container') {
@@ -73,7 +73,7 @@ pipeline {
             //     sh 'docker run --name jenkins-frontend -d -p 3000:3000 $registry/jenkins-frontend:$BUILD_NUMBER'
             // }
             steps {
-                sh "docker compose -f ${dockerComposeFile} -d up frontend"
+                sh "docker compose -f ${dockerComposeFile} up -d frontend"
             }
         }
         stage('Check backend container logs') {
