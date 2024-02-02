@@ -67,7 +67,7 @@ pipeline {
             //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend.id"
             // }
             steps {
-                sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d backend"
+                sh "docker compose -f $DOCKER_COMPOSE_FILE up -d backend"
             }
         }
         stage('Deploy frontend container') {
@@ -78,7 +78,7 @@ pipeline {
                 }
             }
             steps {
-                sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d frontend"
+                sh "docker compose -f $DOCKER_COMPOSE_FILE up -d frontend"
             }
         }
         stage('Check backend container logs') {
