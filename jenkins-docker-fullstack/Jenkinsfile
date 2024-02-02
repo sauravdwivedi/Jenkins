@@ -19,13 +19,13 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImage = docker.build("$registry/jenkins-backend:$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
+                    dockerImage = docker.build("$registry:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                 }
-                // script {
-                //     docker.withRegistry('', registryCredential) {
-                //         dockerImage.push()
-                //     }
-                // }
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
             }
         }
         stage('Build, tag and push frontend container') {
@@ -37,13 +37,13 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImage = docker.build("$registry/jenkins-frontend:$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
+                    dockerImage = docker.build("$registry:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
                 }
-                // script {
-                //     docker.withRegistry('', registryCredential) {
-                //         dockerImage.push()
-                //     }
-                // }
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
             }
         }
         stage('Deploy backend container') {
