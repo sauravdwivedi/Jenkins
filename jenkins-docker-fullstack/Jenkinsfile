@@ -1,8 +1,8 @@
-def forceBuild = false
+def forceBuild = true
 
 pipeline {
     environment {
-        REGISTRY = 'sauravdwivedi/jenkins-docker-fullstack'
+        REGISTRY = 'sauravdwivedi'
         REGISTRY_CREDENTIAL = credentials('dockerhub_id')
         DOCKER_COMPOSE_FILE = 'jenkins-docker-fullstack/compose.yaml'
         CONTAINER_LOG = '**************************************************container-logs**************************************************'
@@ -25,11 +25,14 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
+                    dockerImageBackend = docker.build(
+                        "$REGISTRY/jenkins-docker-fullstack-backend:$BUILD_NUMBER", 
+                        './jenkins-docker-fullstack/backend'
+                    )
                 }
                 script {
                     dockerImageBackend.push()
-                    dockerImageBackend.push('backend-latest')
+                    dockerImageBackend.push('latest')
                 }
             }
         }
@@ -42,12 +45,15 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImageFrontend = docker.build("$REGISTRY:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
+                    dockerImageFrontend = docker.build(
+                        "$REGISTRY/jenkins-docker-fullstack-frontend:$BUILD_NUMBER", 
+                        './jenkins-docker-fullstack/frontend'
+                    )
                 }
                 script {
                     REGISTRY_CREDENTIAL
                     dockerImageFrontend.push()
-                    dockerImageFrontend.push('frontend-latest')
+                    dockerImageFrontend.push('latest')
                 }
             }
         }
@@ -80,13 +86,13 @@ pipeline {
         stage('Check backend container logs') {
             steps {
                 sh(returnStdout: true, returnStatus: true, script: "echo $CONTAINER_LOG")
-                sh 'docker logs jenkins-backend'
+                sh 'docker logs jenkins-backend || true'
             }
         }
         stage('Check frontend container logs') {
             steps {
                 sh(returnStdout: true, returnStatus: true, script: "echo $CONTAINER_LOG")
-                sh 'docker logs jenkins-frontend'
+                sh 'docker logs jenkins-frontend || true'
             }
         }
     }
