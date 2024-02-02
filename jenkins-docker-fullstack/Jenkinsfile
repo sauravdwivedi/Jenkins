@@ -30,7 +30,7 @@ pipeline {
                 script {
                     dockerImageBackend = docker.build(
                         "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
-                        ".$WORK_DIR/backend"
+                        "$WORK_DIR/backend"
                     )
                     dockerImageBackend.push()
                     dockerImageBackend.push('latest')
@@ -48,7 +48,7 @@ pipeline {
                 script {
                     dockerImageFrontend = docker.build(
                         "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
-                        "./$WORK_DIR/frontend"
+                        "$WORK_DIR/frontend"
                     )
                     dockerImageFrontend.push()
                     dockerImageFrontend.push('latest')
