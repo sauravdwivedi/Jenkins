@@ -2,7 +2,6 @@ def forceBuild = true
 
 pipeline {
     environment {
-        WORK_DIR = "$WORKSPACE/jenkins-docker-fullstack"
         REGISTRY = 'sauravdwivedi'
         REGISTRY_CREDENTIAL = credentials('dockerhub_id')
         IMAGE_NAME_BACKEND = 'jenkins-docker-fullstack-backend'
@@ -22,7 +21,7 @@ pipeline {
         stage('Build, tag and push backend container') {
             when {
                 anyOf {
-                    changeset "$WORK_DIR/backend/**"
+                    changeset "$WORKSPACE/backend/**"
                     expression {forceBuild == true}
                 }
             }
@@ -30,7 +29,7 @@ pipeline {
                 script {
                     dockerImageBackend = docker.build(
                         "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
-                        ".$WORK_DIR/backend"
+                        ".$WORKSPACE/backend"
                     )
                     dockerImageBackend.push()
                     dockerImageBackend.push('latest')
@@ -40,7 +39,7 @@ pipeline {
         stage('Build, tag and push frontend container') {
             when {
                 anyOf {
-                    changeset "$WORK_DIR/frontend/**"
+                    changeset "$WORKSPACE/frontend/**"
                     expression {forceBuild == true}
                 }
             }
@@ -48,7 +47,7 @@ pipeline {
                 script {
                     dockerImageFrontend = docker.build(
                         "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
-                        "./$WORK_DIR/frontend"
+                        "./$WORKSPACE/frontend"
                     )
                     dockerImageFrontend.push()
                     dockerImageFrontend.push('latest')
@@ -58,7 +57,7 @@ pipeline {
         stage('Deploy backend container') {
             when {
                 anyOf {
-                    changeset "$WORK_DIR/backend/**"
+                    changeset "$WORKSPACE/backend/**"
                     expression {forceBuild == true}
                 }
             }
@@ -73,7 +72,7 @@ pipeline {
         stage('Deploy frontend container') {
             when {
                 anyOf {
-                    changeset "$WORK_DIR/frontend/**"
+                    changeset "$WORKSPACE/frontend/**"
                     expression {forceBuild == true}
                 }
             }
