@@ -1,4 +1,4 @@
-def forceBuild = false
+def forceBuild = true
 
 pipeline {
     environment {
