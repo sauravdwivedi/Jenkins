@@ -1,10 +1,8 @@
 FROM python
 
-WORKDIR /src
-
-COPY ./backend ./backend
-
 WORKDIR /src/backend
+
+COPY jenkins-docker-fullstack/backend ./jenkins-docker-fullstack/backend
 
 ENV FLASK_APP=app
 ENV PYTHONPATH=/src:/src/backend:/src/backend/controllers
