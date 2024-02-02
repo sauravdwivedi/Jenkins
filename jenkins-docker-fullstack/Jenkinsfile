@@ -28,7 +28,8 @@ pipeline {
         stage('Deploy backend container') {
             when {
                 anyOf {
-                    changeset 'backend/**'
+                    changeset 'jenkins-docker-fullstack/backend/**'
+                    expression {true}
                 }
             }
             steps {
