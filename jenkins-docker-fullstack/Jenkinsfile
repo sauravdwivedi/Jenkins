@@ -62,10 +62,6 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
-            // steps {
-            //     sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-            //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend.id"
-            // }
             steps {
                 sh "docker compose -f $DOCKER_COMPOSE_FILE up -d backend"
             }
