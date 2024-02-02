@@ -1,4 +1,4 @@
-def forceBuild = true
+def forceBuild = false
 
 pipeline {
     environment {
@@ -56,13 +56,13 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
-            steps {
-                sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-                sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend.id"
-            }
             // steps {
-            //     sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d backend"
+            //     sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
+            //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend.id"
             // }
+            steps {
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d backend"
+            }
         }
         stage('Deploy frontend container') {
             when {
@@ -71,13 +71,13 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
-            steps {
-                sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-                sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend.id"
-            }
             // steps {
-            //     sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d frontend"
+            //     sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
+            //     sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend.id"
             // }
+            steps {
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d frontend"
+            }
         }
         stage('Check backend container logs') {
             steps {

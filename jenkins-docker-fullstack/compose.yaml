@@ -1,6 +1,7 @@
 services:
   backend:
-    container_name: backend
+    container_name: jenkins-backend
+    image: sauravdwivedi/jenkins-docker-fullstack:backend-latest
     build: ./backend
     ports:
       - 5000:5000
@@ -11,7 +12,8 @@ services:
     networks:
       - jenkins-docker-fullstack
   frontend:
-    container_name: frontend
+    container_name: jenkins-frontend
+    image: sauravdwivedi/jenkins-docker-fullstack:frontend-latest
     build: ./frontend
     ports:
       - 3000:3000
