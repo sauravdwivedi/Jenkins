@@ -21,7 +21,7 @@ pipeline {
                     dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                 }
                 script {
-                    docker.withRegistry(REGISTRY, REGISTRY_CREDENTIAL) {
+                    docker.withRegistry('https://hub.docker.com/repository/docker/sauravdwivedi/jenkins-docker-fullstack', REGISTRY_CREDENTIAL) {
                         dockerImageBackend.push()
                         dockerImageBackend.push('backend-latest')
                     }
@@ -40,7 +40,7 @@ pipeline {
                     dockerImageFrontend = docker.build("$REGISTRY:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
                 }
                 script {
-                    docker.withRegistry(REGISTRY, REGISTRY_CREDENTIAL) {
+                    docker.withRegistry('https://hub.docker.com/repository/docker/sauravdwivedi/jenkins-docker-fullstack', REGISTRY_CREDENTIAL) {
                         dockerImageFrontend.push()
                         dockerImageFrontend.push('frontend-latest')
                     }
