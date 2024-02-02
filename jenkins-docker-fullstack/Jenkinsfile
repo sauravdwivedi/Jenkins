@@ -9,10 +9,11 @@ pipeline {
     }
     agent any
     stages {
-        stage('Log in to docker registry')
-        steps {
-            script {
-                sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW --password-stdin"
+        stage('Log in to docker registry') {
+            steps {
+                script {
+                    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW --password-stdin"
+                }
             }
         }
         stage('Build, tag and push backend container') {
