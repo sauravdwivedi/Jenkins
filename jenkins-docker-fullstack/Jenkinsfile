@@ -1,11 +1,11 @@
 def forceBuild = true
-def dockerComposeFile = 'jenkins-docker-fullstack/compose.yaml'
 
 pipeline {
     environment {
         registry = 'sauravdwivedi/jenkins-docker-fullstack'
         registryCredential = 'dockerhub_id'
         dockerImage = ''
+        dockerComposeFile = 'jenkins-docker-fullstack/compose.yaml'
         containerLog = "***************************************************container-logs***************************************************"
     }
     agent any
