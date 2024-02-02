@@ -3,7 +3,7 @@ def forceBuild = true
 pipeline {
     environment {
         REGISTRY = 'sauravdwivedi/jenkins-docker-fullstack'
-        REGISTRY_CREDENTIAL = 'dockerhub_id'
+        REGISTRY_CREDENTIAL = credentials('dockerhub_id')
         DOCKER_COMPOSE_FILE = 'jenkins-docker-fullstack/compose.yaml'
         CONTAINER_LOG = '***************************************************container-logs***************************************************'
     }
@@ -21,10 +21,10 @@ pipeline {
                     dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                 }
                 script {
-                    docker.withRegistry('https://hub.docker.com/repository/docker/sauravdwivedi/jenkins-docker-fullstack', REGISTRY_CREDENTIAL) {
-                        dockerImageBackend.push()
-                        dockerImageBackend.push('backend-latest')
-                    }
+                    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
+                    // sh "docker login --with-registry-auth"
+                    dockerImageBackend.push()
+                    dockerImageBackend.push('backend-latest')
                 }
             }
         }
@@ -40,10 +40,9 @@ pipeline {
                     dockerImageFrontend = docker.build("$REGISTRY:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
                 }
                 script {
-                    docker.withRegistry('https://hub.docker.com/repository/docker/sauravdwivedi/jenkins-docker-fullstack', REGISTRY_CREDENTIAL) {
-                        dockerImageFrontend.push()
-                        dockerImageFrontend.push('frontend-latest')
-                    }
+                    REGISTRY_CREDENTIAL
+                    dockerImageFrontend.push()
+                    dockerImageFrontend.push('frontend-latest')
                 }
             }
         }
