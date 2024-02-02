@@ -58,7 +58,7 @@ pipeline {
             }
             // steps {
             //     sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-            //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend.id"
+            //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackendLatest.id"
             // }
             steps {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d backend"
@@ -73,7 +73,7 @@ pipeline {
             }
             // steps {
             //     sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-            //     sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend.id"
+            //     sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontendLatest.id"
             // }
             steps {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d frontend"
