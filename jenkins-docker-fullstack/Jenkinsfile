@@ -52,9 +52,12 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
+            // steps {
+            //     sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
+            //     sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
+            // }
             steps {
-                sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-                sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
+                sh 'docker compose up -d --no-deps backend'
             }
         }
         stage('Deploy frontend container') {

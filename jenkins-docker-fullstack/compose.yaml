@@ -1,0 +1,25 @@
+services:
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - 5000:5000
+    environment:
+      - FLASK_APP=app
+      - FLASK_DEBUG=1
+      - PYTHONPATH=/src:/src/backend:/src/backend/controllers
+    networks:
+      - backend-db
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    expose:
+      - 3000
+    depends_on:
+      - backend
+    networks:
+      - jenkins-docker-fullstack
+
+networks:
+  jenkins-docker-fullstack:
+    driver: bridge
