@@ -2,7 +2,7 @@
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-export PYTHONPATH=`pwd`:`cd backend && pwd`:`cd backend/controllers && pwd`
+export PYTHONPATH=`pwd`:`cd backend && pwd`
 cd backend
 pip3 install -r requirements.txt
 export FLASK_APP=app
