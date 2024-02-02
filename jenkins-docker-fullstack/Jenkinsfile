@@ -9,6 +9,12 @@ pipeline {
     }
     agent any
     stages {
+        stage('Log in to docker registry')
+        steps {
+            script {
+                sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW --password-stdin"
+            }
+        }
         stage('Build, tag and push backend container') {
             when {
                 anyOf {
@@ -21,8 +27,6 @@ pipeline {
                     dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                 }
                 script {
-                    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
-                    // sh "docker login --with-registry-auth"
                     dockerImageBackend.push()
                     dockerImageBackend.push('backend-latest')
                 }
