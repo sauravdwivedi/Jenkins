@@ -12,7 +12,7 @@ pipeline {
         stage('Log in to docker registry') {
             steps {
                 script {
-                    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW --password-stdin"
+                    sh "docker login -u $REGISTRY_CREDENTIAL_USR --password-stdin $REGISTRY_CREDENTIAL_PSW"
                 }
             }
         }
