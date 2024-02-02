@@ -1,4 +1,4 @@
-# Jenkins pipeline with flask backend and React frontend apps
+# Jenkins pipeline with Flask (backend) and React (frontend) apps
 
 <img src=pic.PNG alt="Jenkins pipeline">
 

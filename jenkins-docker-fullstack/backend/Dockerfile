@@ -1,7 +1,6 @@
 FROM python
 
 WORKDIR /src/backend
-
 COPY . .
 
 ENV FLASK_APP=app

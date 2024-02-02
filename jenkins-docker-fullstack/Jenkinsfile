@@ -27,11 +27,29 @@ pipeline {
                 }
             }
         }
+        stage('Build, tag and push frontend container') {
+            when {
+                anyOf {
+                    changeset 'jenkins-docker-fullstack/frontend/**'
+                    expression {forceBuild == true}
+                }
+            }
+            steps {
+                script {
+                    dockerImage = docker.build("$registry/jenkins-frontend:$BUILD_NUMBER", "./jenkins-docker-fullstack/frontend")
+                }
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
         stage('Deploy backend container') {
             when {
                 anyOf {
                     changeset 'jenkins-docker-fullstack/backend/**'
-                    expression {true}
+                    expression {forceBuild == true}
                 }
             }
             steps {
@@ -39,10 +57,28 @@ pipeline {
                 sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
             }
         }
+        stage('Deploy frontend container') {
+            when {
+                anyOf {
+                    changeset 'jenkins-docker-fullstack/frontend/**'
+                    expression {forceBuild == true}
+                }
+            }
+            steps {
+                sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
+                sh 'docker run --name jenkins-frontend -d -p 5000:5000 $registry/jenkins-frontend:$BUILD_NUMBER'
+            }
+        }
         stage('Check backend container logs') {
             steps {
                 sh(returnStdout: true, returnStatus: true, script: 'echo $containerLog')
                 sh 'docker logs jenkins-backend'
+            }
+        }
+        stage('Check frontend container logs') {
+            steps {
+                sh(returnStdout: true, returnStatus: true, script: 'echo $containerLog')
+                sh 'docker logs jenkins-frontend'
             }
         }
     }
