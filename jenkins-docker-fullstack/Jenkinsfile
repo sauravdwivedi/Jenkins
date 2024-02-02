@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImage = docker.build("$registry:jenkins-backend:$BUILD_NUMBER", "./backend")
+                    dockerImage = docker.build("$registry/jenkins-backend:$BUILD_NUMBER", "./backend")
                 }
                 script {
                     docker.withRegistry('', registryCredential) {
@@ -33,7 +33,7 @@ pipeline {
             }
             steps {
                 sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-                sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry:jenkins-backend:$BUILD_NUMBER'
+                sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
             }
         }
         stage('Check backend container logs') {
