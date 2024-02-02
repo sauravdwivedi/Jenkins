@@ -1,4 +1,4 @@
-def forceBuild = false
+def forceBuild = true
 
 pipeline {
     environment {
@@ -29,8 +29,6 @@ pipeline {
                         "$REGISTRY/jenkins-docker-fullstack-backend:$BUILD_NUMBER", 
                         './jenkins-docker-fullstack/backend'
                     )
-                }
-                script {
                     dockerImageBackend.push()
                     dockerImageBackend.push('latest')
                 }
@@ -49,9 +47,6 @@ pipeline {
                         "$REGISTRY/jenkins-docker-fullstack-frontend:$BUILD_NUMBER", 
                         './jenkins-docker-fullstack/frontend'
                     )
-                }
-                script {
-                    REGISTRY_CREDENTIAL
                     dockerImageFrontend.push()
                     dockerImageFrontend.push('latest')
                 }
