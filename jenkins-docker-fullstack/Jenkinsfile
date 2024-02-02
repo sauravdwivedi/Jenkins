@@ -46,11 +46,6 @@ pipeline {
                 // }
             }
         }
-        stage('Create docker network') {
-            steps {
-                sh 'docker network create jenkins-docker-fullstack'
-            }
-        }
         stage('Deploy backend container') {
             when {
                 anyOf {
