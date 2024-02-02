@@ -1,4 +1,4 @@
-def forceBuild = false
+def forceBuild = true
 
 pipeline {
     environment {
@@ -21,11 +21,11 @@ pipeline {
                 script {
                     dockerImage = docker.build("$registry:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                 }
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-                    }
-                }
+                // script {
+                //     docker.withRegistry('', registryCredential) {
+                //         dockerImage.push()
+                //     }
+                // }
             }
         }
         stage('Build, tag and push frontend container') {
@@ -39,11 +39,11 @@ pipeline {
                 script {
                     dockerImage = docker.build("$registry:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
                 }
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-                    }
-                }
+                // script {
+                //     docker.withRegistry('', registryCredential) {
+                //         dockerImage.push()
+                //     }
+                // }
             }
         }
         stage('Deploy backend container') {
@@ -55,7 +55,7 @@ pipeline {
             }
             steps {
                 sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-                sh "docker run --network jenkins-docker-fullstack --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER"
+                sh "docker run --network jenkins-docker-fullstack --name jenkins-backend -d -p 5000:5000 $registry:backend-$BUILD_NUMBER"
             }
             // steps {
             //     sh "docker compose -f ${dockerComposeFile} up -d backend"
@@ -70,7 +70,7 @@ pipeline {
             }
             steps {
                 sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-                sh "docker run --network jenkins-docker-fullstack --name jenkins-frontend -d -p 3000:3000 $registry/jenkins-frontend:$BUILD_NUMBER"
+                sh "docker run --network jenkins-docker-fullstack --name jenkins-frontend -d -p 3000:3000 $registry:frontend-$BUILD_NUMBER"
             }
             // steps {
             //     sh "docker compose -f ${dockerComposeFile} up -d frontend"
