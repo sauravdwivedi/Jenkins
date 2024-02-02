@@ -6,7 +6,7 @@ pipeline {
         registryCredential = 'dockerhub_id'
         dockerImage = ''
         dockerComposeFile = 'jenkins-docker-fullstack/compose.yaml'
-        containerLog = "***************************************************container-logs***************************************************"
+        containerLog = '***************************************************container-logs***************************************************'
     }
     agent any
     stages {
@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImage = docker.build("$registry/jenkins-backend:$BUILD_NUMBER", "./jenkins-docker-fullstack/backend")
+                    dockerImage = docker.build('$registry/jenkins-backend:$BUILD_NUMBER', './jenkins-docker-fullstack/backend')
                 }
                 // script {
                 //     docker.withRegistry('', registryCredential) {
@@ -37,7 +37,7 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImage = docker.build("$registry/jenkins-frontend:$BUILD_NUMBER", "./jenkins-docker-fullstack/frontend")
+                    dockerImage = docker.build('$registry/jenkins-frontend:$BUILD_NUMBER', './jenkins-docker-fullstack/frontend')
                 }
                 // script {
                 //     docker.withRegistry('', registryCredential) {
@@ -58,7 +58,7 @@ pipeline {
             //     sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
             // }
             steps {
-                sh 'docker compose -f ${dockerComposeFile} up backend'
+                sh 'docker compose -f ${dockerComposeFile} -d up backend'
             }
         }
         stage('Deploy frontend container') {
@@ -68,9 +68,12 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
+            // steps {
+            //     sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
+            //     sh 'docker run --name jenkins-frontend -d -p 3000:3000 $registry/jenkins-frontend:$BUILD_NUMBER'
+            // }
             steps {
-                sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-                sh 'docker run --name jenkins-frontend -d -p 3000:3000 $registry/jenkins-frontend:$BUILD_NUMBER'
+                sh 'docker compose -f ${dockerComposeFile} -d up frontend'
             }
         }
         stage('Check backend container logs') {
