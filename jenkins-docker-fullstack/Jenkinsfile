@@ -56,7 +56,7 @@ pipeline {
             }
             steps {
                 sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-                sh "docker run --network jenkins-docker-fullstack --name jenkins-backend -d -p 5000:5000 $dockerImageBackend"
+                sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend"
             }
             // steps {
             //     sh "docker compose -f ${dockerComposeFile} up -d backend"
@@ -71,7 +71,7 @@ pipeline {
             }
             steps {
                 sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-                sh "docker run --network jenkins-docker-fullstack --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend"
+                sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend"
             }
             // steps {
             //     sh "docker compose -f ${dockerComposeFile} up -d frontend"
