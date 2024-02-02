@@ -25,6 +25,11 @@ pipeline {
             }
         }
         stage('Deploy backend container') {
+            when {
+                anyOf {
+                    changeset 'backend/**'
+                }
+            }
             steps {
                 sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
                 sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry:jenkins-backend:$BUILD_NUMBER'

@@ -8,16 +8,20 @@
 - https://github.com/jenkinsci/docker/blob/master/README.md
 - https://harshityadav95.medium.com/how-to-setup-docker-in-jenkins-on-mac-c45fe02f91c5
 
+## Run Jenkins (Docker)
+```bash
+docker run --name jenkins -d -u 0 --privileged -p 8080:8080 -p 50000:50000 --restart=on-failure \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v $(which docker):/usr/bin/docker \
+-v jenkins_home:/var/jenkins_home \
+jenkins/jenkins:lts-jdk17
+```
+- http://localhost:8080/ 
+  
 ## Run Jenkins (Homebrew)
 ```bash
 brew services start jenkins
 brew services restart jenkins
-```
-- http://localhost:8080/ 
-
-## Run Jenkins (Docker)
-```bash
-docker run --name jenkins -d -p 8080:8080 -p 50000:50000 --restart=on-failure jenkins/jenkins:lts-jdk17 
 ```
 - http://localhost:8080/ 
 
