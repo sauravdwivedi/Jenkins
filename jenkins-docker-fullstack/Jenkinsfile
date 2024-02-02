@@ -5,7 +5,7 @@ pipeline {
         REGISTRY = 'sauravdwivedi/jenkins-docker-fullstack'
         REGISTRY_CREDENTIAL = credentials('dockerhub_id')
         DOCKER_COMPOSE_FILE = 'jenkins-docker-fullstack/compose.yaml'
-        CONTAINER_LOG = '*************************************************container-logs*************************************************'
+        CONTAINER_LOG = '**************************************************container-logs**************************************************'
     }
     agent any
     stages {
