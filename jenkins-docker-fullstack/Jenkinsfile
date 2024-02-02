@@ -1,4 +1,4 @@
-def forceBuild = false
+def forceBuild = true
 
 pipeline {
     environment {
@@ -20,12 +20,12 @@ pipeline {
                 script {
                     dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                     dockerImageBackend.push()
-                    dockerImageBackendLatest = docker.build("$REGISTRY:backend-latest", './jenkins-docker-fullstack/backend')
+                    dockerImageBackend.push('backend-latest')
                 }
                 // script {
                 //     docker.withRegistry('', REGISTRY_CREDENTIAL) {
                 //         dockerImageBackend.push()
-                //         dockerImageBackendLatest.push()
+                //         dockerImageBackend.push('backend-latest')
                 //     }
                 // }
             }
@@ -40,12 +40,13 @@ pipeline {
             steps {
                 script {
                     dockerImageFrontend = docker.build("$REGISTRY:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
-                    dockerImageFrontendLatest = docker.build("$REGISTRY:frontend-latest", './jenkins-docker-fullstack/frontend')
+                    dockerImageFrontend.push()
+                    dockerImageFrontend.push('frontend-latest')
                 }
                 // script {
                 //     docker.withRegistry('', REGISTRY_CREDENTIAL) {
                 //         dockerImageFrontend.push()
-                //         dockerImageFrontendLatest.push()
+                //         dockerImageFrontend.push('frontend-latest')
                 //     }
                 // }
             }
@@ -59,7 +60,7 @@ pipeline {
             }
             // steps {
             //     sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-            //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackendLatest.id"
+            //     sh "docker run --name jenkins-backend -d -p 5000:5000 $dockerImageBackend.id"
             // }
             steps {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d backend"
@@ -74,7 +75,7 @@ pipeline {
             }
             // steps {
             //     sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-            //     sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontendLatest.id"
+            //     sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend.id"
             // }
             steps {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d frontend"
