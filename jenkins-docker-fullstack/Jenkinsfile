@@ -53,13 +53,13 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
-            // steps {
-            //     sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
-            //     sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
-            // }
             steps {
-                sh "docker compose -f ${dockerComposeFile} up -d backend"
+                sh 'docker stop jenkins-backend || true && docker rm jenkins-backend || true'
+                sh 'docker run --network jenkins-docker-fullstack --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
             }
+            // steps {
+            //     sh "docker compose -f ${dockerComposeFile} up -d backend"
+            // }
         }
         stage('Deploy frontend container') {
             when {
@@ -68,13 +68,13 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
-            // steps {
-            //     sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-            //     sh 'docker run --name jenkins-frontend -d -p 3000:3000 $registry/jenkins-frontend:$BUILD_NUMBER'
-            // }
             steps {
-                sh "docker compose -f ${dockerComposeFile} up -d frontend"
+                sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
+                sh 'docker run --network jenkins-docker-fullstack --name jenkins-frontend -d -p 3000:3000 $registry/jenkins-frontend:$BUILD_NUMBER'
             }
+            // steps {
+            //     sh "docker compose -f ${dockerComposeFile} up -d frontend"
+            // }
         }
         stage('Check backend container logs') {
             steps {
