@@ -19,6 +19,7 @@ pipeline {
             steps {
                 script {
                     dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
+                    dockerImageBackend.push()
                     dockerImageBackendLatest = docker.build("$REGISTRY:backend-latest", './jenkins-docker-fullstack/backend')
                 }
                 // script {
