@@ -10,7 +10,7 @@ pipeline {
         stage('Build, tag and push backend container') {
             when {
                 anyOf {
-                    changeset 'backend/**'
+                    changeset 'jenkins-docker-fullstack/backend/**'
                 }
             }
             steps {

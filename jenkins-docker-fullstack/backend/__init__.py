@@ -8,7 +8,6 @@ from flask_migrate import Migrate
 from db import db
 
 app = Flask(__name__)
-
 connex_app = connexion.FlaskApp(
     __name__, specification_dir="./openapi/", server="tornado"
 )
