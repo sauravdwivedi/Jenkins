@@ -57,7 +57,7 @@ pipeline {
             //     sh 'docker run --name jenkins-backend -d -p 5000:5000 $registry/jenkins-backend:$BUILD_NUMBER'
             // }
             steps {
-                sh 'docker compose up -d --no-deps backend'
+                sh 'docker compose -f jenkins-docker-fullstack/compose.yaml up -d --no-deps backend'
             }
         }
         stage('Deploy frontend container') {
