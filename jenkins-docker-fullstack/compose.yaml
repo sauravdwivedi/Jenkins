@@ -9,7 +9,7 @@ services:
       - FLASK_DEBUG=1
       - PYTHONPATH=/src:/src/backend:/src/backend/controllers
     networks:
-      - backend-db
+      - jenkins-docker-fullstack
   frontend:
     container_name: frontend
     build: ./frontend
