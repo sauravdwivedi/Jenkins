@@ -20,8 +20,8 @@ jenkins/jenkins:lts-jdk17
   
 ## Run Jenkins (Homebrew)
 ```bash
-brew services start jenkins
-brew services restart jenkins
+brew services start jenkins-lts
+brew services restart jenkins-lts
 ```
 - http://localhost:8080/ 
 
