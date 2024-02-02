@@ -4,7 +4,7 @@ WORKDIR /src/backend
 COPY . .
 
 ENV FLASK_APP=app
-ENV PYTHONPATH=/src:/src/backend:/src/backend/controllers
+ENV PYTHONPATH=/src
 
 RUN pip3 install -r requirements.txt
 RUN chmod +x run.sh
