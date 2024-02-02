@@ -3,6 +3,7 @@ pipeline {
         registry = "sauravdwivedi/jenkins-docker-fullstack"
         registryCredential = 'dockerhub_id'
         dockerImage = ''
+        forceBuild = true
         containerLog = "***************************************************container-logs***************************************************"
     }
     agent any
@@ -11,7 +12,7 @@ pipeline {
             when {
                 anyOf {
                     changeset 'jenkins-docker-fullstack/backend/**'
-                    // expression {true}
+                    expression {forceBuild == true}
                 }
             }
             steps {
