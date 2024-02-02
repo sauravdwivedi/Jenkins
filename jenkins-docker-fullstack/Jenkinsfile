@@ -20,7 +20,7 @@ pipeline {
                     dockerImage = docker.build("$registry/jenkins-backend:$BUILD_NUMBER", "./jenkins-docker-fullstack/backend")
                 }
                 script {
-                    docker.withRegistry(registry, registryCredential) {
+                    docker.withRegistry('', registryCredential) {
                         dockerImage.push()
                     }
                 }
