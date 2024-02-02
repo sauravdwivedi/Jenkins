@@ -12,7 +12,7 @@ pipeline {
             when {
                 anyOf {
                     changeset 'jenkins-docker-fullstack/backend/**'
-                    expression {forceBuild == true}
+                    expression {$forceBuild == true}
                 }
             }
             steps {
