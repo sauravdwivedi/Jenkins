@@ -1,4 +1,4 @@
-def forceBuild = false
+def forceBuild = true
 
 pipeline {
     environment {
@@ -20,12 +20,12 @@ pipeline {
                 script {
                     dockerImageBackend = docker.build("$REGISTRY:backend-$BUILD_NUMBER", './jenkins-docker-fullstack/backend')
                 }
-                // script {
-                //     docker.withRegistry('', REGISTRY_CREDENTIAL) {
-                //         dockerImageBackend.push()
-                //         dockerImageBackend.push('backend-latest')
-                //     }
-                // }
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', REGISTRY_CREDENTIAL) {
+                        dockerImageBackend.push()
+                        dockerImageBackend.push('backend-latest')
+                    }
+                }
             }
         }
         stage('Build, tag and push frontend container') {
@@ -39,12 +39,12 @@ pipeline {
                 script {
                     dockerImageFrontend = docker.build("$REGISTRY:frontend-$BUILD_NUMBER", './jenkins-docker-fullstack/frontend')
                 }
-                // script {
-                //     docker.withRegistry('', REGISTRY_CREDENTIAL) {
-                //         dockerImageFrontend.push()
-                //         dockerImageFrontend.push('frontend-latest')
-                //     }
-                // }
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', REGISTRY_CREDENTIAL) {
+                        dockerImageFrontend.push()
+                        dockerImageFrontend.push('frontend-latest')
+                    }
+                }
             }
         }
         stage('Deploy backend container') {
@@ -69,10 +69,6 @@ pipeline {
                     expression {forceBuild == true}
                 }
             }
-            // steps {
-            //     sh 'docker stop jenkins-frontend || true && docker rm jenkins-frontend || true'
-            //     sh "docker run --name jenkins-frontend -d -p 3000:3000 $dockerImageFrontend.id"
-            // }
             steps {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d frontend"
             }
