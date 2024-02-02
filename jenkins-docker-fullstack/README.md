@@ -7,6 +7,13 @@
 - https://www.jenkins.io/download/
 - https://github.com/jenkinsci/docker/blob/master/README.md
 - https://harshityadav95.medium.com/how-to-setup-docker-in-jenkins-on-mac-c45fe02f91c5
+  
+## Run Jenkins (Homebrew)
+```bash
+brew services start jenkins-lts
+brew services restart jenkins-lts
+```
+- http://localhost:8080/ 
 
 ## Run Jenkins (Docker)
 ```bash
@@ -15,13 +22,6 @@ docker run --name jenkins -d -u 0 --privileged -p 8080:8080 -p 50000:50000 --res
 -v $(which docker):/usr/bin/docker \
 -v jenkins_home:/var/jenkins_home \
 jenkins/jenkins:lts-jdk17
-```
-- http://localhost:8080/ 
-  
-## Run Jenkins (Homebrew)
-```bash
-brew services start jenkins-lts
-brew services restart jenkins-lts
 ```
 - http://localhost:8080/ 
 
@@ -50,11 +50,12 @@ Modify Jenkinsfile accordingly:
 registry = "<Your docker hub username>/<Your repository name>"
 ```
 
-## Backend app
+## Backend and Frontend apps
 
-If Jenkins pipeline works fine, then backend app runs on
+If Jenkins pipeline works fine, then backend and frontend apps run on
 
 - http://127.0.0.1:5000/api/v1/ui/
+- http://127.0.0.1:3000
 
 ## Jenkins console output
 
