@@ -2,8 +2,11 @@ def forceBuild = true
 
 pipeline {
     environment {
+        WORK_DIR = "$WORKSPACE/jenkins-docker-fullstack"
         REGISTRY = 'sauravdwivedi'
         REGISTRY_CREDENTIAL = credentials('dockerhub_id')
+        IMAGE_NAME_BACKEND = 'jenkins-docker-fullstack-backend'
+        IMAGE_NAME_FRONTEND = 'jenkins-docker-fullstack-frontend'
         DOCKER_COMPOSE_FILE = 'jenkins-docker-fullstack/compose.yaml'
         CONTAINER_LOG = '**************************************************container-logs**************************************************'
     }
@@ -19,15 +22,15 @@ pipeline {
         stage('Build, tag and push backend container') {
             when {
                 anyOf {
-                    changeset 'jenkins-docker-fullstack/backend/**'
+                    changeset "$WORK_DIR/backend/**"
                     expression {forceBuild == true}
                 }
             }
             steps {
                 script {
                     dockerImageBackend = docker.build(
-                        "$REGISTRY/jenkins-docker-fullstack-backend:$BUILD_NUMBER", 
-                        './jenkins-docker-fullstack/backend'
+                        "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
+                        ".$WORK_DIR/backend"
                     )
                     dockerImageBackend.push()
                     dockerImageBackend.push('latest')
@@ -37,15 +40,15 @@ pipeline {
         stage('Build, tag and push frontend container') {
             when {
                 anyOf {
-                    changeset 'jenkins-docker-fullstack/frontend/**'
+                    changeset "$WORK_DIR/frontend/**"
                     expression {forceBuild == true}
                 }
             }
             steps {
                 script {
                     dockerImageFrontend = docker.build(
-                        "$REGISTRY/jenkins-docker-fullstack-frontend:$BUILD_NUMBER", 
-                        './jenkins-docker-fullstack/frontend'
+                        "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
+                        "./$WORK_DIR/frontend"
                     )
                     dockerImageFrontend.push()
                     dockerImageFrontend.push('latest')
@@ -55,7 +58,7 @@ pipeline {
         stage('Deploy backend container') {
             when {
                 anyOf {
-                    changeset 'jenkins-docker-fullstack/backend/**'
+                    changeset "$WORK_DIR/backend/**"
                     expression {forceBuild == true}
                 }
             }
@@ -70,7 +73,7 @@ pipeline {
         stage('Deploy frontend container') {
             when {
                 anyOf {
-                    changeset 'jenkins-docker-fullstack/frontend/**'
+                    changeset "$WORK_DIR/frontend/**"
                     expression {forceBuild == true}
                 }
             }
