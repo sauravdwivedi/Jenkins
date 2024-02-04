@@ -83,7 +83,7 @@ pipeline {
         }
         stage('Check frontend container logs') {
             steps {
-                sh(returnStdout: true, returnStatus: true, script: "echo $ASTERISKS-backend-logs-$ASTERISKS")
+                sh(returnStdout: true, returnStatus: true, script: "echo $ASTERISKS-frontend-logs-$ASTERISKS")
                 sh 'docker logs jenkins-frontend || true'
             }
         }
