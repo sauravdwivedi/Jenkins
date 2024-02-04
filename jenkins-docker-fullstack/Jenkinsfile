@@ -1,4 +1,4 @@
-def forceBuild = true
+def forceBuild = false
 
 def loginToDockerRegistry() {
     sh "echo Log in to docker registry"
@@ -13,6 +13,7 @@ pipeline {
         IMAGE_NAME_BACKEND = 'jenkins-docker-fullstack-backend'
         IMAGE_NAME_FRONTEND = 'jenkins-docker-fullstack-frontend'
         DOCKER_COMPOSE_FILE = 'jenkins-docker-fullstack/compose.yaml'
+        FORCE_BUILD = 'yes'
         CONTAINER_LOG = '**************************************************container-logs**************************************************'
     }
     agent any
@@ -21,7 +22,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/backend/**"
-                    expression {forceBuild == true}
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
             steps {
