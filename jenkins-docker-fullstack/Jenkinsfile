@@ -10,77 +10,69 @@ pipeline {
         IMAGE_NAME_BACKEND = 'jenkins-docker-fullstack-backend'
         IMAGE_NAME_FRONTEND = 'jenkins-docker-fullstack-frontend'
         DOCKER_COMPOSE_FILE = 'jenkins-docker-fullstack/compose.yaml'
-        FORCE_BUILD = true
+        FORCE_BUILD = 'no'
         CONTAINER_LOG = '**************************************************container-logs**************************************************'
     }
     agent any
     stages {
-        stage('Build, tag and push backend and frontend containers') {
-            parallel {
-                stage('Build, tag and push backend container') {
-                    when {
-                        anyOf {
-                            changeset "$WORK_DIR/backend/**"
-                            environment name: 'FORCE_BUILD', value: true
-                        }
-                    }
-                    steps {
-                        script {
-                            loginToDockerRegistry()
-                            dockerImageBackend = docker.build(
-                                "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
-                                "$WORK_DIR/backend"
-                            )
-                            dockerImageBackend.push()
-                            dockerImageBackend.push('latest')
-                        }
-                    }
+        stage('Build, tag and push backend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/backend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
-                stage('Build, tag and push frontend container') {
-                    when {
-                        anyOf {
-                            changeset "$WORK_DIR/frontend/**"
-                            environment name: 'FORCE_BUILD', value: true
-                        }
-                    }
-                    steps {
-                        script {
-                            loginToDockerRegistry()
-                            dockerImageFrontend = docker.build(
-                                "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
-                                "$WORK_DIR/frontend"
-                            )
-                            dockerImageFrontend.push()
-                            dockerImageFrontend.push('latest')
-                        }
-                    }
+            }
+            steps {
+                script {
+                    loginToDockerRegistry()
+                    dockerImageBackend = docker.build(
+                        "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
+                        "$WORK_DIR/backend"
+                    )
+                    dockerImageBackend.push()
+                    dockerImageBackend.push('latest')
                 }
             }
         }
-        stage('Deploy backend and frontend containers') {
-            parallel {
-                stage('Deploy backend container') {
-                    when {
-                        anyOf {
-                            changeset "$WORK_DIR/backend/**"
-                            environment name: 'FORCE_BUILD', value: true
-                        }
-                    }
-                    steps {
-                        sh "docker compose -f $DOCKER_COMPOSE_FILE up -d backend"
-                    }
+        stage('Build, tag and push frontend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/frontend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
-                stage('Deploy frontend container') {
-                    when {
-                        anyOf {
-                            changeset "$WORK_DIR/frontend/**"
-                            environment name: 'FORCE_BUILD', value: true
-                        }
-                    }
-                    steps {
-                        sh "docker compose -f $DOCKER_COMPOSE_FILE up -d frontend"
-                    }
+            }
+            steps {
+                script {
+                    loginToDockerRegistry()
+                    dockerImageFrontend = docker.build(
+                        "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
+                        "$WORK_DIR/frontend"
+                    )
+                    dockerImageFrontend.push()
+                    dockerImageFrontend.push('latest')
                 }
+            }
+        }
+        stage('Deploy backend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/backend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
+            steps {
+                sh "docker compose -f $DOCKER_COMPOSE_FILE up -d backend"
+            }
+        }
+        stage('Deploy frontend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/frontend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
+            steps {
+                sh "docker compose -f $DOCKER_COMPOSE_FILE up -d frontend"
             }
         }
         stage('Check backend container logs') {
