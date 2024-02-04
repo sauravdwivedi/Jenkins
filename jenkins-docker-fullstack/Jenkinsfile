@@ -1,8 +1,7 @@
 def loginToDockerRegistry() {
-    DOCKER_REG = credentials('dockerhub_id')
+    def DOCKER_REG = credentials('dockerhub_id')
     sh "docker login -u $DOCKER_REG_USR -p $DOCKER_REG_PSW"
 }
-
 
 pipeline {
     environment {
