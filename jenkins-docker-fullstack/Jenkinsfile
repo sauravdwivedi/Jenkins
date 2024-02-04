@@ -1,5 +1,10 @@
 def forceBuild = false
 
+def loginToDockerRegistry() {
+    sh "echo Log in to docker registry"
+    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
+}
+
 pipeline {
     environment {
         WORK_DIR = "$WORKSPACE/jenkins-docker-fullstack"
@@ -12,13 +17,6 @@ pipeline {
     }
     agent any
     stages {
-        stage('Log in to docker registry') {
-            steps {
-                script {
-                    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
-                }
-            }
-        }
         stage('Build, tag and push backend container') {
             when {
                 anyOf {
@@ -28,6 +26,7 @@ pipeline {
             }
             steps {
                 script {
+                    loginToDockerRegistry()
                     dockerImageBackend = docker.build(
                         "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
                         "$WORK_DIR/backend"
@@ -46,6 +45,7 @@ pipeline {
             }
             steps {
                 script {
+                    loginToDockerRegistry()
                     dockerImageFrontend = docker.build(
                         "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
                         "$WORK_DIR/frontend"
