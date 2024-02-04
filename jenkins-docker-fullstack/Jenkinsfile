@@ -1,5 +1,4 @@
 def loginToDockerRegistry() {
-    sh "echo Log in to docker registry"
     sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
 }
 
