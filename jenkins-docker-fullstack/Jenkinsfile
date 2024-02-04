@@ -1,4 +1,4 @@
-def forceBuild = false
+def forceBuild = true
 
 def loginToDockerRegistry() {
     sh "echo Log in to docker registry"
