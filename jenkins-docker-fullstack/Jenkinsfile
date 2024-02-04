@@ -1,5 +1,3 @@
-def forceBuild = false
-
 def loginToDockerRegistry() {
     sh "echo Log in to docker registry"
     sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
@@ -41,7 +39,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/frontend/**"
-                    expression {forceBuild == true}
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
             steps {
@@ -60,7 +58,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/backend/**"
-                    expression {forceBuild == true}
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
             steps {
@@ -71,7 +69,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/frontend/**"
-                    expression {forceBuild == true}
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
             steps {
