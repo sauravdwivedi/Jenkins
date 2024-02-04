@@ -1,7 +1,7 @@
 def loginToDockerRegistry() {
     withCredentials([
         usernamePassword(
-            credentialsId: "dockerhub_id",
+            credentialsId: credentials('dockerhub_id'),
             passwordVariable: 'DOCKER_REG_PSW',
             usernameVariable: 'DOCKER_REG_USER'
         )
