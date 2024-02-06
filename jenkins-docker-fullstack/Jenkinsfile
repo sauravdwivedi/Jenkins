@@ -50,7 +50,9 @@ pipeline {
     agent any
     stages {
         stage ('Build, tag and push top container') {
-            buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+            steps {
+                buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+            }
         }
         stage('Build, tag and push frontend container') {
             when {
