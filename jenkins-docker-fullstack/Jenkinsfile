@@ -27,20 +27,16 @@ def deployContainer(serviceName) {
             environment name: 'FORCE_BUILD', value: 'yes'
         }
     }
-    steps {
-        sh "docker compose -f $DOCKER_COMPOSE_FILE up -d $serviceName"
-    }
+    sh "docker compose -f $DOCKER_COMPOSE_FILE up -d $serviceName"
 }
 
 def checkContainerLogs(serviceName) {
-    steps {
-        sh(
-            returnStdout: true, 
-            returnStatus: true, 
-            script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
-        )
-        sh "docker logs jenkins-$serviceName || true"
-    }
+    sh(
+        returnStdout: true, 
+        returnStatus: true, 
+        script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
+    )
+    sh "docker logs jenkins-$serviceName || true"
 }
 
 
@@ -63,19 +59,29 @@ pipeline {
             }
         }
         stage('Build, tag and push frontend container') {
-            buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
+            steps {
+                buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
+            }
         }
         stage('Deploy backend container') {
-            deployContainer('backend')
+            steps {
+                deployContainer('backend')
+            }
         }
         stage('Deploy frontend container') {
-            deployContainer('frontend')
+            steps {
+                deployContainer('frontend')
+            }
         }
         stage('Check backend container logs') {
-            checkContainerLogs('backend')
+            steps {
+                checkContainerLogs('backend')
+            }
         }
         stage('Check frontend container logs') {
-            checkContainerLogs('frontend')
+            steps {
+                checkContainerLogs('frontend')
+            }
         }
     }
 }
