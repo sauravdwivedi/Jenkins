@@ -8,17 +8,15 @@ def buildTagAndPushContainer(serviceName, imageName) {
             changeset "$WORK_DIR/$serviceName/**"
             environment name: 'FORCE_BUILD', value: 'yes'
         }
-    }
-    steps {
-        script {
-            loginToDockerRegistry()
-            dockerImage = docker.build(
-                "$REGISTRY/$imageName:$BUILD_NUMBER", 
-                "$WORK_DIR/$serviceName"
-            )
-            dockerImage.push()
-            dockerImage.push('latest')
-        }
+    } 
+    script {
+        loginToDockerRegistry()
+        dockerImage = docker.build(
+            "$REGISTRY/$imageName:$BUILD_NUMBER", 
+            "$WORK_DIR/$serviceName"
+        )
+        dockerImage.push()
+        dockerImage.push('latest')
     }
 }
 
@@ -60,7 +58,9 @@ pipeline {
     agent any
     stages {
         stage('Build, tag and push backend container') {
-            buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+            steps {
+                buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+            }
         }
         stage('Build, tag and push frontend container') {
             buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
