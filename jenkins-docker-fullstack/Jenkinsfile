@@ -2,7 +2,7 @@ def loginToDockerRegistry() {
     sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
 }
 
-def  buildTagAndPushContainer(serviceName, imageName) {
+def buildTagAndPushContainer(serviceName, imageName) {
     when {
         anyOf {
             changeset "$WORK_DIR/$serviceName/**"
