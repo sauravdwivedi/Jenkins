@@ -10,7 +10,7 @@ def buildTagAndPushContainer(serviceName, imageName) {
                 environment name: 'FORCE_BUILD', value: 'yes'
             }
         } 
-        script {
+        steps {
             loginToDockerRegistry()
             dockerImage = docker.build(
                 "$REGISTRY/$imageName:$BUILD_NUMBER", 
