@@ -2,6 +2,50 @@ def loginToDockerRegistry() {
     sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
 }
 
+def  buildTagAndPushContainer(serviceName, imageName) {
+    when {
+        anyOf {
+            changeset "$WORK_DIR/$serviceName/**"
+            environment name: 'FORCE_BUILD', value: 'yes'
+        }
+    }
+    steps {
+        script {
+            loginToDockerRegistry()
+            dockerImage = docker.build(
+                "$REGISTRY/$imageName:$BUILD_NUMBER", 
+                "$WORK_DIR/$serviceName"
+            )
+            dockerImage.push()
+            dockerImage.push('latest')
+        }
+    }
+}
+
+def deployContainer(serviceName) {
+    when {
+        anyOf {
+            changeset "$WORK_DIR/$serviceName/**"
+            environment name: 'FORCE_BUILD', value: 'yes'
+        }
+    }
+    steps {
+        sh "docker compose -f $DOCKER_COMPOSE_FILE up -d $serviceName"
+    }
+}
+
+def checkContainerLogs(serviceName) {
+    steps {
+        sh(
+            returnStdout: true, 
+            returnStatus: true, 
+            script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
+        )
+        sh "docker logs jenkins-$serviceName || true"
+    }
+}
+
+
 pipeline {
     environment {
         WORK_DIR = "$WORKSPACE/jenkins-docker-fullstack"
@@ -16,76 +60,22 @@ pipeline {
     agent any
     stages {
         stage('Build, tag and push backend container') {
-            when {
-                anyOf {
-                    changeset "$WORK_DIR/backend/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
-                }
-            }
-            steps {
-                script {
-                    loginToDockerRegistry()
-                    dockerImageBackend = docker.build(
-                        "$REGISTRY/$IMAGE_NAME_BACKEND:$BUILD_NUMBER", 
-                        "$WORK_DIR/backend"
-                    )
-                    dockerImageBackend.push()
-                    dockerImageBackend.push('latest')
-                }
-            }
+            buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
         }
         stage('Build, tag and push frontend container') {
-            when {
-                anyOf {
-                    changeset "$WORK_DIR/frontend/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
-                }
-            }
-            steps {
-                script {
-                    loginToDockerRegistry()
-                    dockerImageFrontend = docker.build(
-                        "$REGISTRY/$IMAGE_NAME_FRONTEND:$BUILD_NUMBER", 
-                        "$WORK_DIR/frontend"
-                    )
-                    dockerImageFrontend.push()
-                    dockerImageFrontend.push('latest')
-                }
-            }
+            buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
         }
         stage('Deploy backend container') {
-            when {
-                anyOf {
-                    changeset "$WORK_DIR/backend/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
-                }
-            }
-            steps {
-                sh "docker compose -f $DOCKER_COMPOSE_FILE up -d backend"
-            }
+            deployContainer('backend')
         }
         stage('Deploy frontend container') {
-            when {
-                anyOf {
-                    changeset "$WORK_DIR/frontend/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
-                }
-            }
-            steps {
-                sh "docker compose -f $DOCKER_COMPOSE_FILE up -d frontend"
-            }
+            deployContainer('frontend')
         }
         stage('Check backend container logs') {
-            steps {
-                sh(returnStdout: true, returnStatus: true, script: "echo $ASTERISKS-backend-logs-$ASTERISKS")
-                sh 'docker logs jenkins-backend || true'
-            }
+            checkContainerLogs('backend')
         }
         stage('Check frontend container logs') {
-            steps {
-                sh(returnStdout: true, returnStatus: true, script: "echo $ASTERISKS-frontend-logs-$ASTERISKS")
-                sh 'docker logs jenkins-frontend || true'
-            }
+            checkContainerLogs('frontend')
         }
     }
 }
