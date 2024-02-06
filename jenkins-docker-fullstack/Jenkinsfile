@@ -3,30 +3,16 @@ def loginToDockerRegistry() {
 }
 
 def buildTagAndPushContainer(serviceName, imageName) {
-    when {
-        anyOf {
-            changeset "$WORK_DIR/$serviceName/**"
-            environment name: 'FORCE_BUILD', value: 'yes'
-        }
-    } 
-    steps {
-        loginToDockerRegistry()
-        dockerImage = docker.build(
-            "$REGISTRY/$imageName:$BUILD_NUMBER", 
-            "$WORK_DIR/$serviceName"
-        )
-        dockerImage.push()
-        dockerImage.push('latest')
-    }
+    loginToDockerRegistry()
+    dockerImage = docker.build(
+        "$REGISTRY/$imageName:$BUILD_NUMBER", 
+        "$WORK_DIR/$serviceName"
+    )
+    dockerImage.push()
+    dockerImage.push('latest')
 }
 
 def deployContainer(serviceName) {
-    when {
-        anyOf {
-            changeset "$WORK_DIR/$serviceName/**"
-            environment name: 'FORCE_BUILD', value: 'yes'
-        }
-    }
     sh "docker compose -f $DOCKER_COMPOSE_FILE up -d $serviceName"
 }
 
@@ -54,21 +40,45 @@ pipeline {
     agent any
     stages {
         stage('Build, tag and push backend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/backend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            } 
             steps {
                 buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
             }
         }
         stage('Build, tag and push frontend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/frontend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            } 
             steps {
                 buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
             }
         }
         stage('Deploy backend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/backend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
             steps {
                 deployContainer('backend')
             }
         }
         stage('Deploy frontend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/frontend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
             steps {
                 deployContainer('frontend')
             }
