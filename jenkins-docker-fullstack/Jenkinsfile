@@ -1,7 +1,7 @@
 def lib
 
 node('built-in') {
-    lib = load "./jenkins-docker-fullstack/library.groovy"
+    lib = load "$WORKSPACE/jenkins-docker-fullstack/library.groovy"
 }
 
 
