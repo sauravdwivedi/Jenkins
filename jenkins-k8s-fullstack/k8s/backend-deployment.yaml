@@ -13,6 +13,11 @@ spec:
       labels:
         app: jenkins-backend
     spec:
+      restartPolicy: Always
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "backend.local"
       containers:
       - name: jenkins-backend
         image: sauravdwivedi/jenkins-k8s-fullstack-backend:latest
