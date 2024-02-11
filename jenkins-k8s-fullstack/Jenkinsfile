@@ -13,7 +13,7 @@ def buildTagAndPushContainer(serviceName, imageName) {
 }
 
 def deployContainer(serviceName) {
-    sh "kubectl create namespace $serviceName"
+    sh "kubectl create namespace $serviceName || true"
     sh "kubectl apply -f $WORK_DIR/k8s/$serviceName-deployment.yaml -n $serviceName"
 }
 
