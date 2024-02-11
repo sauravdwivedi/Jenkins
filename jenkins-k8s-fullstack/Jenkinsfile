@@ -1,0 +1,98 @@
+def loginToDockerRegistry() {
+    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
+}
+
+def buildTagAndPushContainer(serviceName, imageName) { 
+    loginToDockerRegistry()
+    dockerImage = docker.build(
+        "$REGISTRY/$imageName:$BUILD_NUMBER", 
+        "$WORK_DIR/$serviceName"
+    )
+    dockerImage.push()
+    dockerImage.push('latest')
+}
+
+def deployContainer(serviceName) {
+    sh "kubectl create namespace $serviceName"
+    sh "kubectl apply -f $WORK_DIR/k8s/$serviceName-deployment.yaml"
+}
+
+def checkContainerLogs(serviceName) {
+    sh(
+        returnStdout: true, 
+        returnStatus: true, 
+        script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
+    )
+    sh "docker logs jenkins-$serviceName || true"
+}
+
+
+pipeline {
+    environment {
+        WORK_DIR = "$WORKSPACE/jenkins-k8s-fullstack"
+        REGISTRY = 'sauravdwivedi'
+        REGISTRY_CREDENTIAL = credentials('dockerhub_id')
+        IMAGE_NAME_BACKEND = 'jenkins-k8s-fullstack-backend'
+        IMAGE_NAME_FRONTEND = 'jenkins-k8s-fullstack-frontend'
+        DOCKER_COMPOSE_FILE = 'jenkins-k8s-fullstack/compose.yaml'
+        FORCE_BUILD = 'yes'
+        ASTERISKS = '**************************************************'
+    }
+    agent any
+    stages {
+        stage ('Build, tag and push backend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/backend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
+            steps {
+                buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+            }
+        }
+        stage('Build, tag and push frontend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/frontend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            } 
+            steps {
+                buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
+            }
+        }
+        stage('Deploy backend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/backend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
+            steps {
+                deployContainer('backend')
+            }
+        }
+        stage('Deploy frontend container') {
+            when {
+                anyOf {
+                    changeset "$WORK_DIR/frontend/**"
+                    environment name: 'FORCE_BUILD', value: 'yes'
+                }
+            }
+            steps {
+                deployContainer('frontend')
+            }
+        }
+        stage('Check backend container logs') {
+            steps {
+                checkContainerLogs('backend')
+            }
+        }
+        stage('Check frontend container logs') {
+            steps {
+                checkContainerLogs('frontend')
+            }
+        }
+    }
+}

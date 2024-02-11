@@ -1,0 +1,56 @@
+.App {
+  text-align: center;
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+.submit-transaction {
+  text-align: center;
+}
+
+.message {
+  text-align: center;
+}
+
+.summary {
+  text-align: left;
+}
+
+.balance {
+  text-align: center;
+}
+
+.history {
+  text-align: left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  min-height: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
