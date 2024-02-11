@@ -23,7 +23,7 @@ def checkContainerLogs(serviceName) {
         returnStatus: true, 
         script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
     )
-    pod = sh "kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1"
+    def pod = sh "kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1"
     sh "kubectl logs $pod -n $serviceName || true"
 }
 
@@ -87,13 +87,11 @@ pipeline {
         }
         stage('Check backend container logs') {
             steps {
-                sleep(60)
                 checkContainerLogs('backend')
             }
         }
         stage('Check frontend container logs') {
             steps {
-                sleep(60)
                 checkContainerLogs('frontend')
             }
         }
