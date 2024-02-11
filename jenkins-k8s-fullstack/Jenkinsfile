@@ -21,7 +21,9 @@ pipeline {
                 }
             }
             steps {
-                lib.buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+                script{
+                    lib.buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+                }
             }
         }
         stage('Build, tag and push frontend container') {
