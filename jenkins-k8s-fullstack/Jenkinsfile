@@ -1,4 +1,4 @@
-def lib = load 'library.groovy
+def lib = load 'library.groovy'
 
 pipeline {
     environment {
