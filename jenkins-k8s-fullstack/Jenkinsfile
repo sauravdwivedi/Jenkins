@@ -23,7 +23,7 @@ def checkContainerLogs(serviceName) {
         returnStatus: true, 
         script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
     )
-    sh "export POD = kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1"
+    sh "export POD=`kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1`"
     sh "kubectl logs $POD -n $serviceName || true"
 }
 
