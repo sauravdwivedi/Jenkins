@@ -1,5 +1,5 @@
 node {
-    def lib = load "$env.WORKSPACE/jenkins-k8s-fullstack/library.groovy"
+    def lib = load "$WORKSPACE/jenkins-k8s-fullstack/library.groovy"
 }
 
 
