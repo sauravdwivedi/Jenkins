@@ -14,7 +14,7 @@ def buildTagAndPushContainer(serviceName, imageName) {
 
 def deployContainer(serviceName) {
     sh "kubectl create namespace $serviceName"
-    sh "kubectl apply -f $WORK_DIR/k8s/$serviceName-deployment.yaml"
+    sh "kubectl apply -f $WORK_DIR/k8s/$serviceName-deployment.yaml -n $serviceName"
 }
 
 def checkContainerLogs(serviceName) {
@@ -23,7 +23,7 @@ def checkContainerLogs(serviceName) {
         returnStatus: true, 
         script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
     )
-    sh "docker logs jenkins-$serviceName || true"
+    sh "kubectl get pods -n $serviceName || true"
 }
 
 
