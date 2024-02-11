@@ -1,28 +1,7 @@
-def loginToDockerRegistry() {
-    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
-}
+def lib
 
-def buildTagAndPushContainer(serviceName, imageName) { 
-    loginToDockerRegistry()
-    dockerImage = docker.build(
-        "$REGISTRY/$imageName:$BUILD_NUMBER", 
-        "$WORK_DIR/$serviceName"
-    )
-    dockerImage.push()
-    dockerImage.push('latest')
-}
-
-def deployContainer(serviceName) {
-    sh "docker compose -f $DOCKER_COMPOSE_FILE up -d $serviceName"
-}
-
-def checkContainerLogs(serviceName) {
-    sh(
-        returnStdout: true, 
-        returnStatus: true, 
-        script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
-    )
-    sh "docker logs jenkins-$serviceName || true"
+node('built-in') {
+    lib = load "$WORKSPACE/jenkins-docker-fullstack/library.groovy"
 }
 
 
@@ -47,7 +26,7 @@ pipeline {
                 }
             }
             steps {
-                buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+                script{lib.buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)}
             }
         }
         stage('Build, tag and push frontend container') {
@@ -58,7 +37,7 @@ pipeline {
                 }
             } 
             steps {
-                buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
+                script{lib.buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)}
             }
         }
         stage('Deploy backend container') {
@@ -69,7 +48,7 @@ pipeline {
                 }
             }
             steps {
-                deployContainer('backend')
+                script{lib.deployContainer('backend')}
             }
         }
         stage('Deploy frontend container') {
@@ -80,17 +59,17 @@ pipeline {
                 }
             }
             steps {
-                deployContainer('frontend')
+                script{lib.deployContainer('frontend')}
             }
         }
         stage('Check backend container logs') {
             steps {
-                checkContainerLogs('backend')
+                script{lib.checkContainerLogs('backend')}
             }
         }
         stage('Check frontend container logs') {
             steps {
-                checkContainerLogs('frontend')
+                script{lib.checkContainerLogs('frontend')}
             }
         }
     }
