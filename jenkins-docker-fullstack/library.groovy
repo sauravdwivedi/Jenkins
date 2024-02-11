@@ -23,7 +23,7 @@ def checkContainerLogs(serviceName) {
         script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
     )
     serviceContainer = sh(
-        script: "docker container ls | grep jenkins-$serviceName | awk \'\{print \$1\}\'", 
+        script: "docker container ls | grep jenkins-$serviceName | awk /'/{print /$1/}/'", 
         returnStdout: true
     )
     if (serviceContainer != "") {
