@@ -1,3 +1,5 @@
+package jenkins-k8s-fullstack
+
 class Lib {
     def loginToDockerRegistry() {
         sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"

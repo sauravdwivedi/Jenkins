@@ -1,4 +1,4 @@
-def lib = new Lib()
+def lib = new jenkins-k8s-fullstack.Lib()
 
 pipeline {
     environment {
