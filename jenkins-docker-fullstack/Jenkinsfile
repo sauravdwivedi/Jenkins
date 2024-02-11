@@ -1,8 +1,8 @@
-// def lib
+def lib
 
-// node('built-in') {
-//     lib = load "$WORKSPACE/jenkins-docker-fullstack/library.groovy"
-// }
+node('built-in') {
+    lib = load "$WORKSPACE/jenkins-docker-fullstack/library.groovy"
+}
 
 
 pipeline {
