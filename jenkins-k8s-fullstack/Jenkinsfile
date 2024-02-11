@@ -47,8 +47,10 @@ pipeline {
                 }
             }
             steps {
-                def lib = load "./jenkins-k8s-fullstack/library.groovy"
-                script{lib.deployContainer('backend')}
+                script{
+                    def lib = load "./jenkins-k8s-fullstack/library.groovy"
+                    lib.deployContainer('backend')
+                }
             }
         }
         stage('Deploy frontend container') {
