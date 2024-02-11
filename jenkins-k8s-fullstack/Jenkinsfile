@@ -1,4 +1,7 @@
-def lib = load "$env.WORKSPACE/jenkins-k8s-fullstack/library.groovy"
+node {
+    def lib = load "$env.WORKSPACE/jenkins-k8s-fullstack/library.groovy"
+}
+
 
 pipeline {
     environment {
