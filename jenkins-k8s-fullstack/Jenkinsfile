@@ -1,4 +1,4 @@
-def lib = new jenkins-k8s-fullstack.Lib()
+def lib = load 'library.groovy
 
 pipeline {
     environment {
