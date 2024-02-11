@@ -13,6 +13,7 @@ spec:
       labels:
         app: jenkins-frontend
     spec:
+      restartPolicy: Always
       containers:
       - name: jenkins-frontend
         image: sauravdwivedi/jenkins-k8s-fullstack-frontend:latest
