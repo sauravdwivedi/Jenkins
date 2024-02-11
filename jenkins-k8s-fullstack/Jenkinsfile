@@ -74,7 +74,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/backend/**"
-                    environment name: 'FORCE_BUILD', value: 'no'
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
             steps {
@@ -85,7 +85,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/frontend/**"
-                    environment name: 'FORCE_BUILD', value: 'no'
+                    environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
             steps {
