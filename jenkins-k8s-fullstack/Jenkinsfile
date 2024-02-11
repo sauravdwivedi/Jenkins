@@ -1,39 +1,4 @@
-def loginToDockerRegistry() {
-    sh "docker login -u $REGISTRY_CREDENTIAL_USR -p $REGISTRY_CREDENTIAL_PSW"
-}
-
-def buildTagAndPushContainer(serviceName, imageName) { 
-    loginToDockerRegistry()
-    dockerImage = docker.build(
-        "$REGISTRY/$imageName:$BUILD_NUMBER", 
-        "$WORK_DIR/$serviceName"
-    )
-    dockerImage.push()
-    dockerImage.push('latest')
-}
-
-def deployContainer(serviceName) {
-    sh "kubectl create namespace $serviceName || true"
-    sh "kubectl apply -f $WORK_DIR/k8s/$serviceName-deployment.yaml -n $serviceName"
-}
-
-def checkContainerLogs(serviceName) {
-    sh(
-        returnStdout: true, 
-        returnStatus: true, 
-        script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
-    )
-    servicePod = sh(
-        script: "kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1", 
-        returnStdout: true
-    )
-    if (servicePod != "") {
-        sh "kubectl logs -n $serviceName $servicePod"
-    } else {
-        sh "echo No pods found in the namespace $serviceName"
-    }
-}
-
+def lib = new Lib()
 
 pipeline {
     environment {
@@ -56,7 +21,7 @@ pipeline {
                 }
             }
             steps {
-                buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
+                lib.buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
             }
         }
         stage('Build, tag and push frontend container') {
@@ -67,7 +32,7 @@ pipeline {
                 }
             } 
             steps {
-                buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
+                lib.buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
             }
         }
         stage('Deploy backend container') {
@@ -75,11 +40,11 @@ pipeline {
                 anyOf {
                     changeset "$WORK_DIR/backend/**"
                     changeset "$WORK_DIR/k8s/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
+                    environment name: 'FORCE_BUILD', value: 'no'
                 }
             }
             steps {
-                deployContainer('backend')
+                lib.deployContainer('backend')
             }
         }
         stage('Deploy frontend container') {
@@ -91,17 +56,17 @@ pipeline {
                 }
             }
             steps {
-                deployContainer('frontend')
+                lib.deployContainer('frontend')
             }
         }
         stage('Check backend container logs') {
             steps {
-                checkContainerLogs('backend')
+                lib.checkContainerLogs('backend')
             }
         }
         stage('Check frontend container logs') {
             steps {
-                checkContainerLogs('frontend')
+                lib.checkContainerLogs('frontend')
             }
         }
     }
