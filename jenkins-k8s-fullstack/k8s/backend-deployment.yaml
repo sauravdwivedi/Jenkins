@@ -16,4 +16,4 @@ spec:
       - name: jenkins-backend
         image: sauravdwivedi/jenkins-k8s-fullstack-backend:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 3000
