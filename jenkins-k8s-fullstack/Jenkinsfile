@@ -27,12 +27,10 @@ def checkContainerLogs(serviceName) {
         script: "kubectl get pods --no-headers -o custom-columns=:metadata.name | head -1", 
         returnStdout: true
     )
-    script {
-        if (servicePod != "") {
-            sh "kubectl logs -n $serviceName $servicePod"
-        } else {
-            sh "echo No pods found in the namespace $serviceName"
-        }
+    if (servicePod != "") {
+        sh "kubectl logs -n $serviceName $servicePod"
+    } else {
+        sh "echo No pods found in the namespace $serviceName"
     }
 }
 
