@@ -34,4 +34,4 @@ def checkContainerLogs(serviceName) {
     }
 }
 
-return this
+return this;

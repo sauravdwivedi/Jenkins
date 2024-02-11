@@ -1,4 +1,4 @@
-node('agent') {
+node('built-in') {
     def lib = load "./jenkins-k8s-fullstack/library.groovy"
 }
 
