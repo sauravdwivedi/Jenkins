@@ -21,9 +21,7 @@ pipeline {
                 }
             }
             steps {
-                script{
-                    lib.buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)
-                }
+                script{lib.buildTagAndPushContainer('backend', IMAGE_NAME_BACKEND)}
             }
         }
         stage('Build, tag and push frontend container') {
@@ -34,7 +32,7 @@ pipeline {
                 }
             } 
             steps {
-                lib.buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)
+                script{lib.buildTagAndPushContainer('frontend', IMAGE_NAME_FRONTEND)}
             }
         }
         stage('Deploy backend container') {
@@ -46,7 +44,7 @@ pipeline {
                 }
             }
             steps {
-                lib.deployContainer('backend')
+                script{lib.deployContainer('backend')}
             }
         }
         stage('Deploy frontend container') {
@@ -58,17 +56,17 @@ pipeline {
                 }
             }
             steps {
-                lib.deployContainer('frontend')
+                script{lib.deployContainer('frontend')}
             }
         }
         stage('Check backend container logs') {
             steps {
-                lib.checkContainerLogs('backend')
+                script{lib.checkContainerLogs('backend')}
             }
         }
         stage('Check frontend container logs') {
             steps {
-                lib.checkContainerLogs('frontend')
+                script{lib.checkContainerLogs('frontend')}
             }
         }
     }
