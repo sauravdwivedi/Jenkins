@@ -25,7 +25,7 @@ def checkContainerLogs(serviceName) {
             script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
         )
         servicePod = sh(
-            script: "kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1", 
+            script: "kubectl get pods --no-headers -o custom-columns=:metadata.name | head -1", 
             returnStdout: true
         )
         if (servicePod != null) {
