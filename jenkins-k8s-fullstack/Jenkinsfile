@@ -1,5 +1,5 @@
-node {
-    def file = load "./jenkins-k8s-fullstack/library.groovy"
+node('built-in') {
+    def lib = load "./jenkins-k8s-fullstack/library.groovy"
 }
 
 
@@ -47,7 +47,7 @@ pipeline {
                 }
             }
             steps {
-                script{file.deployContainer('backend')}
+                script{lib.deployContainer('backend')}
             }
         }
         stage('Deploy frontend container') {
