@@ -87,11 +87,13 @@ pipeline {
         }
         stage('Check backend container logs') {
             steps {
+                sleep(60)
                 checkContainerLogs('backend')
             }
         }
         stage('Check frontend container logs') {
             steps {
+                sleep(60)
                 checkContainerLogs('frontend')
             }
         }
