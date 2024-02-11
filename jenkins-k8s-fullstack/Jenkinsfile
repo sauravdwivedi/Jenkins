@@ -1,6 +1,6 @@
-// node {
-//     def lib = load "./library.groovy"
-// }
+node {
+    def lib = load "./library.groovy"
+}
 
 
 pipeline {
