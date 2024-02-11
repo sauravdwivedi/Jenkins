@@ -27,9 +27,8 @@ def checkContainerLogs(serviceName) {
         script: "kubectl get pods --no-headers -o custom-columns=:metadata.name | head -1", 
         returnStdout: true
     )
-    sh "echo $servicePod"
     script {
-        if (servicePod != null) {
+        if (servicePod != "") {
             sh "kubectl logs -n $serviceName $servicePod"
         } else {
             sh "echo No pods found in the namespace $serviceName"
@@ -46,7 +45,7 @@ pipeline {
         IMAGE_NAME_BACKEND = 'jenkins-k8s-fullstack-backend'
         IMAGE_NAME_FRONTEND = 'jenkins-k8s-fullstack-frontend'
         DOCKER_COMPOSE_FILE = 'jenkins-k8s-fullstack/compose.yaml'
-        FORCE_BUILD = 'yes'
+        FORCE_BUILD = 'no'
         ASTERISKS = '**************************************************'
     }
     agent any
@@ -77,7 +76,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/backend/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
+                    environment name: 'FORCE_BUILD', value: 'no'
                 }
             }
             steps {
@@ -88,7 +87,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/frontend/**"
-                    environment name: 'FORCE_BUILD', value: 'yes'
+                    environment name: 'FORCE_BUILD', value: 'no'
                 }
             }
             steps {
