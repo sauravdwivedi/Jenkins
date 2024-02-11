@@ -18,17 +18,21 @@ def deployContainer(serviceName) {
 }
 
 def checkContainerLogs(serviceName) {
-    sh(
-        returnStdout: true, 
-        returnStatus: true, 
-        script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
-    )
-    servicePod = sh(
-        script: "kubectl get pods --no-headers -o custom-columns=:metadata.name | head -1", 
-        returnStdout: true
-    )
-    if (servicePod != null) {
-        sh "kubectl logs -n $serviceName $servicePod"
+    script{
+        sh(
+            returnStdout: true, 
+            returnStatus: true, 
+            script: "echo $ASTERISKS-$serviceName-logs-$ASTERISKS"
+        )
+        servicePod = sh(
+            script: "kubectl get pods -n $serviceName --no-headers -o custom-columns=:metadata.name | head -1", 
+            returnStdout: true
+        )
+        if (servicePod != null) {
+            sh "kubectl logs -n $serviceName $servicePod"
+        } else {
+            sh "echo No pods found in the namespace $serviceName"
+        }
     }
 }
 
