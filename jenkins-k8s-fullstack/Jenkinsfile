@@ -52,6 +52,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "$WORK_DIR/backend/**"
+                    changeset "$WORK_DIR/k8s/backend-*.yaml"
                     environment name: 'FORCE_BUILD', value: 'yes'
                 }
             }
