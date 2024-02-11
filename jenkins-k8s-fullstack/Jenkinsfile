@@ -49,7 +49,7 @@ pipeline {
                 }
             }
             steps {
-                script{lib.deployContainer('backend')}
+                lib.deployContainer('backend')
             }
         }
         stage('Deploy frontend container') {
