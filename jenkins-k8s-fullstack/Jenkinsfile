@@ -13,7 +13,7 @@ pipeline {
         IMAGE_NAME_BACKEND = 'jenkins-k8s-fullstack-backend'
         IMAGE_NAME_FRONTEND = 'jenkins-k8s-fullstack-frontend'
         DOCKER_COMPOSE_FILE = 'jenkins-k8s-fullstack/compose.yaml'
-        FORCE_BUILD = 'no'
+        FORCE_BUILD = 'yes'
         ASTERISKS = '**************************************************'
     }
     agent any
