@@ -2,6 +2,21 @@
 
 <img src=pic.PNG alt="Jenkins pipeline">
 
+## Architecture
+
+```mermaid
+flowchart LR
+    A(jenkins agent at host)
+    B(git hub repository)
+    C(docker registry)
+    D(docker engine at host)
+    A --> |fetch commit/event| B
+    B --> |receive commit/event| A
+    A --> |push image| C
+    C --> |pull image| A
+    A --> |deploy image| D
+```
+
 ## Install and configure Jenkins
 
 - https://www.jenkins.io/download/
