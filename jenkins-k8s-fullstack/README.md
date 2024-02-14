@@ -8,13 +8,13 @@
 flowchart LR
     A(jenkins agent at host)
     B(git hub repository)
-    D(docker registry)
-    E(k8s cluster at host)
+    C(docker registry)
+    D(k8s cluster at host)
     A --> |fetch commit/event| B
     B --> |receive commit/event| A
-    A --> |push image| D
-    D --> |pull image| A
-    A --> |deploy image| E
+    A --> |push image| C
+    C --> |pull image| A
+    A --> |deploy image| D
 ```
 
 ## Install and configure Jenkins
