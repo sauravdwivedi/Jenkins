@@ -8,7 +8,7 @@
 flowchart LR
     A(jenkins agent at host)
     B(git hub repository)
-    C(docker registry)
+    C[(docker registry)]
     D(docker engine at host)
     A --> |fetch commit/event| B
     B --> |receive commit/event| A
